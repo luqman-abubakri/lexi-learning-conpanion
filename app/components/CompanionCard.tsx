@@ -38,11 +38,11 @@ const CompanionCard = ({
         </div> 
 
         {/* Text Content Area */}
-        <div className="space-y-1.5 mb-4 flex-grow">
-          <h2 className="text-xl md:text-2xl font-bold leading-tight tracking-tight text-neutral-900 break-words">
+        <div className="space-y-1.5 mb-4 grow">
+          <h2 className="text-xl md:text-2xl font-bold leading-tight tracking-tight text-neutral-900 wrap-break-words">
             {name}
           </h2> 
-          <p className="text-sm md:text-base text-neutral-800 font-medium opacity-90 break-words">
+          <p className="text-sm md:text-base text-neutral-800 font-medium opacity-90 wrap-break-words">
             {topic}
           </p> 
         </div>
