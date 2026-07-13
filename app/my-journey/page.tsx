@@ -10,8 +10,9 @@ export default async function MyJourneyPage() {
         My Journey
       </h1>
       <p className="mt-2 text-neutral-600">
-        Your voice learning sessions and transcripts.
+        Your voice learning sessions.
       </p>
+
 
       {sessions.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-dashed border-neutral-200 bg-white p-10 text-center">
@@ -51,9 +52,7 @@ export default async function MyJourneyPage() {
                   Open companion
                 </Link>
               ) : null}
-              <p className="mt-4 whitespace-pre-wrap text-sm leading-6 text-neutral-700">
-                {session.transcript || 'No transcript captured for this session.'}
-              </p>
+
             </article>
           ))}
         </div>
