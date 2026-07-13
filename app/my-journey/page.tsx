@@ -1,5 +1,33 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { getVoiceConversationsForJourney } from '@/app/libs/actions/voice';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'My Journey | Lexi',
+    template: '%s | Lexi',
+  },
+  description: 'View your voice learning sessions and review your progress over time.',
+  openGraph: {
+    type: 'website',
+    title: 'My Journey | Lexi',
+    description: 'View your voice learning sessions and review your progress over time.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lexi AI',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'My Journey | Lexi',
+    description: 'View your voice learning sessions and review your progress over time.',
+    images: ['/og-image.png'],
+  },
+};
 
 export default async function MyJourneyPage() {
   const sessions = await getVoiceConversationsForJourney();
@@ -9,10 +37,7 @@ export default async function MyJourneyPage() {
       <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-neutral-900">
         My Journey
       </h1>
-      <p className="mt-2 text-neutral-600">
-        Your voice learning sessions.
-      </p>
-
+      <p className="mt-2 text-neutral-600">Your voice learning sessions.</p>
 
       {sessions.length === 0 ? (
         <div className="mt-8 rounded-2xl border border-dashed border-neutral-200 bg-white p-10 text-center">
@@ -37,13 +62,15 @@ export default async function MyJourneyPage() {
                     {session.companions?.name ?? 'Voice session'}
                   </h2>
                   <p className="text-sm text-neutral-600">
-                    {session.companions?.subject ?? 'General'} · {session.companions?.topic ?? 'Session'}
+                    {session.companions?.subject ?? 'General'} ·{' '}
+                    {session.companions?.topic ?? 'Session'}
                   </p>
                 </div>
                 <div className="text-sm text-neutral-500">
                   {new Date(session.created_at).toLocaleString()} · {session.duration}s
                 </div>
               </div>
+
               {session.companion_id ? (
                 <Link
                   href={`/companions/${session.companion_id}`}
@@ -52,7 +79,6 @@ export default async function MyJourneyPage() {
                   Open companion
                 </Link>
               ) : null}
-
             </article>
           ))}
         </div>
@@ -60,3 +86,4 @@ export default async function MyJourneyPage() {
     </div>
   );
 }
+

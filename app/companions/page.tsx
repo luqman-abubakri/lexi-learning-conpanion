@@ -3,6 +3,37 @@ import CompanionCard from '@/app/components/CompanionCard';
 import CompanionsToolbar from '@/app/components/CompanionsToolbar';
 import { getCompanions } from '@/app/libs/actions/companions';
 import type { CompanionSort, CompanionVisibility } from '@/types/companion';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Companions | Lexi',
+    template: '%s | Lexi',
+  },
+  description:
+    'Browse, search, and launch your learning companions built for voice practice and AI tutoring.',
+  openGraph: {
+    type: 'website',
+    title: 'Companions | Lexi',
+    description:
+      'Browse, search, and launch your learning companions built for voice practice and AI tutoring.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lexi AI',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Companions | Lexi',
+    description:
+      'Browse, search, and launch your learning companions built for voice practice and AI tutoring.',
+    images: ['/og-image.png'],
+  },
+};
 
 interface CompanionsPageProps {
   searchParams: Promise<{
@@ -14,7 +45,9 @@ interface CompanionsPageProps {
   }>;
 }
 
-export default async function CompanionsPage({ searchParams }: CompanionsPageProps) {
+export default async function CompanionsPage({
+  searchParams,
+}: CompanionsPageProps) {
   const params = await searchParams;
   const sort = (['newest', 'oldest', 'name'].includes(params.sort ?? '')
     ? params.sort
@@ -81,3 +114,4 @@ export default async function CompanionsPage({ searchParams }: CompanionsPagePro
     </div>
   );
 }
+

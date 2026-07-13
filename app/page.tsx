@@ -3,6 +3,37 @@ import CompanionList from './components/CompanionList';
 import CTA from './components/CTA';
 import { getPopularCompanions } from './libs/actions/companions';
 import { getRecentVoiceConversations } from './libs/actions/voice';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Lexi – AI Voice Study Companion',
+    template: '%s | Lexi',
+  },
+  description:
+    'Learn faster with Lexi, an AI-powered voice study companion. Practice concepts, ask questions naturally, and improve your learning with personalized AI conversations.',
+  openGraph: {
+    type: 'website',
+    url: 'https://lexi-ai.vercel.app/',
+    title: 'Lexi – AI Voice Study Companion',
+    description:
+      'Talk naturally with an AI tutor that helps you study smarter, practice concepts, and learn faster.',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Lexi AI',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Lexi – AI Voice Study Companion',
+    description: 'Your intelligent AI study companion powered by voice.',
+    images: ['/og-image.png'],
+  },
+};
 
 export default async function HomePage() {
   const [companions, recentSessions] = await Promise.all([
@@ -14,7 +45,9 @@ export default async function HomePage() {
     id: session.id,
     name: session.companions?.name ?? 'Voice session',
     subject: session.companions?.subject ?? 'General',
-    topic: (session.companions?.topic ?? session.transcript.slice(0, 80)) || 'Completed session',
+    topic:
+      (session.companions?.topic ?? session.transcript.slice(0, 80)) ||
+      'Completed session',
     duration: Math.max(1, Math.round(session.duration / 60)),
     color: session.companions?.color ?? '#059669',
   }));
@@ -60,3 +93,4 @@ export default async function HomePage() {
     </div>
   );
 }
+

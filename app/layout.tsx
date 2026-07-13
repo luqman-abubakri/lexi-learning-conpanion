@@ -60,7 +60,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://lexi-learning-conpanion.vercel.app/",
+    url: "https://lexi-ai.vercel.app",
     siteName: "Lexi",
     title: "Lexi – AI Voice Study Companion",
     description:
@@ -86,9 +86,7 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/favicon.ico",
-    shortcut: "/favicon.ico",
-    apple: "/apple-touch-icon.png",
+    icon: "/icon.png",
   },
 
   category: "education",
