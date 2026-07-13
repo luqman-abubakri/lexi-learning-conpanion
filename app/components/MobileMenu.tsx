@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { SignInButton, SignUpButton, UserButton, useAuth } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import { Navlink } from "../libs/type";
 
@@ -11,6 +12,7 @@ type MobileMenuProps = {
 
 const MobileMenu = ({ links }: MobileMenuProps) => {
   const [open, setOpen] = useState(false);
+  const { isSignedIn } = useAuth();
 
   return (
     <div className="md:hidden">
@@ -45,13 +47,30 @@ const MobileMenu = ({ links }: MobileMenuProps) => {
             </Link>
           ))}
 
-          <Link
-            href="/sign-in"
-            onClick={() => setOpen(false)}
-            className="mt-4 rounded-xl border border-emerald-200 px-4 py-3 text-center font-medium text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-50"
-          >
-            Sign In
-          </Link>
+          {!isSignedIn ? (
+            <>
+              <SignInButton mode="modal">
+                <button
+                  onClick={() => setOpen(false)}
+                  className="mt-4 rounded-xl border border-emerald-200 px-4 py-3 text-center font-medium text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+                >
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button
+                  onClick={() => setOpen(false)}
+                  className="mt-3 rounded-xl bg-emerald-600 px-4 py-3 text-center font-medium text-white transition hover:bg-emerald-700"
+                >
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </>
+          ) : (
+            <div className="mt-4 flex justify-start">
+              <UserButton />
+            </div>
+          )}
         </div>
       </div>
     </div>

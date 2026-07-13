@@ -1,10 +1,13 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import { auth } from "@clerk/nextjs/server";
 import { Navlink } from "../libs/type";
 import MobileMenu from "./MobileMenu";
 
-const Navbar = () => {
+const Navbar = async () => {
+  const { userId } = await auth();
   const links: Navlink[] = [
     { name: "Home", href: "/" },
     { name: "Companions", href: "/companions" },
@@ -45,12 +48,24 @@ const Navbar = () => {
           ))}
         </div>
 
-        <Link
-          href="/sign-in"
-          className="hidden rounded-xl border border-emerald-200 px-5 py-2.5 text-sm font-medium text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-50 md:inline-flex"
-        >
-          Sign In
-        </Link>
+        <div className="hidden items-center gap-2 md:flex">
+          {!userId ? (
+            <>
+              <SignInButton mode="modal">
+                <button className="rounded-xl border border-emerald-200 px-5 py-2.5 text-sm font-medium text-emerald-700 transition hover:border-emerald-300 hover:bg-emerald-50">
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal">
+                <button className="rounded-xl bg-emerald-600 px-5 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-700">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </>
+          ) : (
+            <UserButton />
+          )}
+        </div>
 
         <MobileMenu links={links} />
       </div>
