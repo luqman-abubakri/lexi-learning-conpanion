@@ -1,5 +1,5 @@
+import { History } from "lucide-react";
 import { cn } from "@/lib/utils";
-
 
 interface CompanionListProps {
   title: string;
@@ -15,10 +15,8 @@ interface CompanionListProps {
   classNames?: string;
 }
 
-
 const CompanionList = ({ title, companions, classNames }: CompanionListProps) => {
   const sessions = companions ?? [];
-
 
   return (
     <article className={cn("rounded-2xl", classNames)}>
@@ -27,7 +25,25 @@ const CompanionList = ({ title, companions, classNames }: CompanionListProps) =>
 
         <div className="mt-4">
           {sessions.length === 0 ? (
-            <div className="text-sm text-neutral-600">No sessions yet.</div>
+            <div className="relative rounded-2xl border border-emerald-100 bg-gradient-to-br from-emerald-50 via-white to-sky-50 p-8">
+              <div
+                className="flex flex-col items-center justify-center gap-4 text-center animate-[fadeIn_260ms_ease-out]"
+                style={{ minHeight: 160 }}
+              >
+                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-emerald-600/10 ring-1 ring-emerald-600/15">
+                  <History className="h-7 w-7 text-emerald-700" />
+                </div>
+
+                <div>
+                  <h3 className="text-base font-semibold text-neutral-900 sm:text-lg">
+                    No recent sessions
+                  </h3>
+                  <p className="mt-1 max-w-xs text-sm leading-6 text-neutral-600">
+                    Start a conversation with one of your AI companions to see your learning sessions here.
+                  </p>
+                </div>
+              </div>
+            </div>
           ) : (
             <div className="space-y-3">
               {sessions.map((c) => (
@@ -37,8 +53,8 @@ const CompanionList = ({ title, companions, classNames }: CompanionListProps) =>
                 >
                   <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                      <div className="font-semibold text-neutral-900 truncate">{c.name ?? c.topic}</div>
-                      <div className="text-sm text-neutral-700 truncate">{c.topic}</div>
+                      <div className="truncate font-semibold text-neutral-900">{c.name ?? c.topic}</div>
+                      <div className="truncate text-sm text-neutral-700">{c.topic}</div>
                     </div>
 
                     <div className="shrink-0 rounded-full bg-black px-3 py-1 text-xs font-semibold text-white">
@@ -57,3 +73,4 @@ const CompanionList = ({ title, companions, classNames }: CompanionListProps) =>
 };
 
 export default CompanionList;
+
