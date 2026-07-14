@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { getVoiceConversationsForJourney } from '@/app/libs/actions/voice';
+import JourneyGrid from './journeyGrid';
+
 
 export const metadata: Metadata = {
   title: {
@@ -50,39 +52,10 @@ export default async function MyJourneyPage() {
           </Link>
         </div>
       ) : (
-        <div className="mt-8 space-y-4">
-          {sessions.map((session) => (
-            <article
-              key={session.id}
-              className="rounded-2xl border border-neutral-200 bg-white p-5 shadow-sm"
-            >
-              <div className="flex flex-wrap items-start justify-between gap-3">
-                <div>
-                  <h2 className="text-lg font-semibold text-neutral-900">
-                    {session.companions?.name ?? 'Voice session'}
-                  </h2>
-                  <p className="text-sm text-neutral-600">
-                    {session.companions?.subject ?? 'General'} ·{' '}
-                    {session.companions?.topic ?? 'Session'}
-                  </p>
-                </div>
-                <div className="text-sm text-neutral-500">
-                  {new Date(session.created_at).toLocaleString()} · {session.duration}s
-                </div>
-              </div>
-
-              {session.companion_id ? (
-                <Link
-                  href={`/companions/${session.companion_id}`}
-                  className="mt-3 inline-flex text-sm font-medium text-emerald-700 hover:text-emerald-800"
-                >
-                  Open companion
-                </Link>
-              ) : null}
-            </article>
-          ))}
-        </div>
+        // Client-side filtering/searching is handled inside the grid component.
+        <JourneyGrid sessions={sessions} />
       )}
+
     </div>
   );
 }
