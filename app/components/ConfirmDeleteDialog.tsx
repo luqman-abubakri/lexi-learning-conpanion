@@ -1,7 +1,10 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+
+import { useEffect } from 'react';
+
 import { Loader2, Trash2 } from 'lucide-react';
+
 
 type ConfirmDeleteDialogProps = {
   open: boolean;
@@ -24,13 +27,16 @@ export default function ConfirmDeleteDialog({
   onConfirm,
   isConfirming = false,
 }: ConfirmDeleteDialogProps) {
-  const [mounted, setMounted] = useState(false);
-
   useEffect(() => {
-    setMounted(true);
+
+    // Avoid calling setState in an effect.
+
+    // For this dialog, SSR is safe; mounting guard is no longer necessary.
+    // Keeping it as a no-op ensures consistent behavior.
   }, []);
 
-  if (!mounted || !open) return null;
+  if (!open) return null;
+
 
   const handleCancel = () => {
     if (isConfirming) return;

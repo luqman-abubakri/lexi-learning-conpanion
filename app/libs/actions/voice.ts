@@ -9,8 +9,12 @@ export async function saveVoiceConversation(input: {
   companionId: string;
   transcript: string;
   duration: number;
+  // Optional: stored for debugging/analytics only.
+  subjectGate?: { allowed: boolean; confidence: number };
 }) {
+
   const userId = await requireAuth();
+
   const supabase = createAdminClient();
 
   const { data: companion, error: companionError } = await supabase
@@ -46,6 +50,7 @@ export async function saveVoiceConversation(input: {
 }
 
 export async function getRecentVoiceConversations(limit = 8) {
+
   const userId = await getOptionalAuth();
 
   if (!userId) {

@@ -5,6 +5,10 @@ import { saveVoiceConversation } from '@/app/libs/actions/voice';
 import type { CompanionRecord } from '@/types/companion';
 import { buildCompanionGreeting, buildCompanionSystemPrompt } from '@/types/companion';
 import { useVapi } from './useVapi';
+import { validateSubjectTurn } from '@/lib/subject/validateSubjectTurn';
+
+
+
 
 export function useVoiceSession(companion: CompanionRecord) {
   const {
@@ -30,9 +34,47 @@ export function useVoiceSession(companion: CompanionRecord) {
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const transcriptRef = useRef<string[]>([]);
 
+  const lastTranscriptIndexRef = useRef<number>(0);
+
+
+
   useEffect(() => {
     transcriptRef.current = transcriptLines;
-  }, [transcriptLines]);
+
+    // Call-killer gate: validate newly added user transcript chunks.
+    // Best-effort: if an off-topic/prompt-injection-like turn is detected,
+    // stop the call immediately (prevent further model output).
+    (async () => {
+      const companionSubject = companion.subject;
+      const companionTopic = companion.topic;
+
+      const prevCount = lastTranscriptIndexRef.current;
+      const newSegments = transcriptLines.slice(prevCount);
+      if (newSegments.length === 0) return;
+
+      // Advance index early to avoid re-checking the same segments.
+      lastTranscriptIndexRef.current = transcriptLines.length;
+
+      const candidate = newSegments[newSegments.length - 1]?.trim();
+      if (!candidate) return;
+
+      const endpointUrl = '/api/topic-classification';
+      const decision = await validateSubjectTurn({
+        endpointUrl,
+        companionSubject,
+        companionTopic,
+        text: candidate,
+      });
+
+      if (!decision.allowed) {
+        stopCall();
+      }
+    })().catch(() => {
+      // If classification fails, do not hard-block conversation.
+    });
+  }, [transcriptLines, companion, stopCall]);
+
+
 
   useEffect(() => {
     if (isConnected && !timerRef.current) {
@@ -74,6 +116,7 @@ export function useVoiceSession(companion: CompanionRecord) {
   }), [companion]);
 
   const persistTranscript = useCallback(async (duration: number) => {
+
     const transcript = transcriptRef.current.join('\n').trim();
     if (!transcript || duration <= 0) return;
 

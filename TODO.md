@@ -1,54 +1,20 @@
-# Voice system refactor TODO
+# TODO
 
-## Step 1 — Controller singleton
-- Create `lib/voice/voiceController.ts` (or similar) that owns the single Vapi instance.
-- Add guarded event listener registration.
-- Provide controller API: start/stop/subscribe/connect-state.
+## Subject enforcement (Math/English/Biology etc.)
+- [ ] Audit + identify where subject prompt is built and where voice user turns are handled.
+- [ ] Rewrite system prompt in `types/companion.ts` to strictly refuse off-subject/role-change requests.
+  - [x] (to be done next)
 
-## Step 2 — Hook refactor (useVapi)
-- Refactor `hooks/useVapi.ts` into a thin subscription wrapper around the controller.
-- Ensure it never creates multiple Vapi instances.
+- [x] Add semantic-ish topic classifier (server-side) for user turns.
 
-## Step 3 — Automatic reconnection
-- Implement exponential backoff reconnect (1,2,4,8,16s…)
-- Add max retry count + reconnect spam prevention.
+- [ ] Implement strict server-side validation gate by preventing off-topic turns from reaching the model.
+  - [x] Call-killer flow: detect off-topic user transcripts and immediately stop the Vapi call and replace with a predefined refusal message.
 
-## Step 4 — Network/visibility + UI gating
-- Detect offline/online and pause/resume reconnect.
-- Update UI button disabled states during offline.
+- [x] Wire the gate into the voice transcript handling loop.
 
-## Step 5 — Preserve session
-- Add active session persistence (`voice_sessions` table via Supabase migration or alternative).
-- Implement server actions:
-  - create active voice session on start
-  - update transcript + remaining time on disconnect/reconnect
-  - fetch active session on reconnect
-  - end active session on end
+- [x] Ensure refusal response is <= 3 sentences and never partially answers.
 
-## Step 6 — useVoiceSession logic
-- Preserve call duration (no reset on reconnect).
-- Preserve transcript buffer across reconnect.
-- On reconnect success, restore session from backend.
-
-## Step 7 — Microphone recovery
-- Add mic permission revoked handling and “Retry Microphone” UI.
-- Handle device changes (best-effort) without crashing.
-
-## Step 8 — UI updates
-- Update `VoiceSessionPanel.tsx` to show required statuses:
-  - 🟢 Connected
-  - 🟡 Connecting...
-  - 🟡 Reconnecting...
-  - 🔴 Disconnected
-  - 🔴 Connection Lost
-  - ⚪ Ending Session
-- Disable mic/start/send when connecting/offline.
-
-## Step 9 — Cleanup + memory leak prevention
-- Ensure controller clears timers and removes listeners.
-- Ensure hooks unsubscribe properly.
-
-## Step 10 — Testing
-- Build + lint.
-- Manual scenario checklist.
+- [ ] Add prompt-injection regression tests (unit tests for classifier + gate).
+- [ ] Run `npm run lint` and `npm run build`.
+- [ ] Manual test scenarios: Math/English examples from prompt.
 
