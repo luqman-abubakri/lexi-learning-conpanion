@@ -1,9 +1,12 @@
+import Link from 'next/link';
+import { ArrowRight } from 'lucide-react';
 import CompanionCard from './components/CompanionCard';
 import CompanionList from './components/CompanionList';
 import CTA from './components/CTA';
 import { getPopularCompanions } from './libs/actions/companions';
 import { getRecentVoiceConversations } from './libs/actions/voice';
 import type { Metadata } from 'next';
+
 
 export const metadata: Metadata = {
   title: {
@@ -54,17 +57,27 @@ export default async function HomePage() {
 
   return (
     <div className="px-4 md:px-12 pt-6 pb-12 max-w-7xl mx-auto">
-      <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-neutral-900">
-        Popular Companions
-      </h1>
+      <div className="flex items-start justify-between gap-4">
+        <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-neutral-900">
+          Popular Companions
+        </h1>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <Link
+          href="/companions"
+          className="hidden sm:inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2.5 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-neutral-800 active:scale-[0.99]"
+        >
+          View More
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </Link>
+      </div>
+
+      <section className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
         {companions.length === 0 ? (
           <div className="col-span-full rounded-2xl border border-dashed border-neutral-200 bg-white p-8 text-center text-neutral-600">
             No companions yet. Create your first learning companion to get started.
           </div>
         ) : (
-          companions.map((companion) => (
+          companions.slice(0, 3).map((companion) => (
             <CompanionCard
               key={companion.id}
               id={companion.id}
@@ -76,7 +89,20 @@ export default async function HomePage() {
             />
           ))
         )}
+
+        {companions.length > 0 ? (
+          <div className="sm:hidden absolute bottom-0 right-0">
+            <Link
+              href="/companions"
+              className="inline-flex items-center gap-2 rounded-xl bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:bg-neutral-800 active:scale-[0.99]"
+            >
+              View More
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </div>
+        ) : null}
       </section>
+
 
       <section className="grid grid-cols-1 lg:grid-cols-2 gap-8 pt-6 border-t border-neutral-100">
         <div className="min-h-0">
