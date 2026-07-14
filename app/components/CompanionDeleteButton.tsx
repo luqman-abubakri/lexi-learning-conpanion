@@ -69,12 +69,14 @@ export default function CompanionDeleteButton({
           'inline-flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60'
         }
       >
-        {optimisticDeleting ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
-        ) : (
-          <Trash2 className="h-4 w-4" />
-        )}
-        {optimisticDeleting ? 'Deleting…' : 'Delete'}
+        <span className="inline-flex items-center gap-2">
+          {optimisticDeleting ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <Trash2 className="h-4 w-4" />
+          )}
+          <span>{optimisticDeleting ? 'Deleting…' : 'Delete'}</span>
+        </span>
       </button>
 
       <ConfirmDeleteDialog
