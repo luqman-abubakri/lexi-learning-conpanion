@@ -74,7 +74,7 @@ const CompanionCard = ({
                 companionId={id}
                 ownerId={ownerId}
                 currentUserId={currentUserId}
-                className="w-full justify-center"
+                className="w-full"
               />
             ) : null}
           </div>

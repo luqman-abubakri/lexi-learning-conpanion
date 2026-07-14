@@ -66,7 +66,7 @@ export default function CompanionDeleteButton({
         disabled={isPending || optimisticDeleting}
         className={
           className ??
-          'inline-flex items-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60'
+          'inline-flex w-full items-center justify-center gap-2 rounded-xl bg-red-600 px-3 py-2 text-sm font-semibold text-white transition hover:bg-red-700 disabled:opacity-60'
         }
       >
         {optimisticDeleting ? (
