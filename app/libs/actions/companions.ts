@@ -282,25 +282,45 @@ export async function deleteCompanion(id: string) {
   const userId = await requireAuth();
   const supabase = createAdminClient();
 
+  // Ownership check (server-enforced). If it fails, never proceed.
   const existing = await getOwnedCompanion(id, userId);
   if (!existing) {
-    throw new Error('Companion not found or access denied');
+    // Do not reveal whether the companion exists.
+    throw new Error('Unauthorized');
   }
 
-  const { error } = await supabase
+  // Database safety: transaction-like deletion.
+  // We currently only have voice_conversations referencing companions via FK (on delete cascade).
+  // We'll explicitly delete those first to guarantee no orphaned rows even if FK behavior changes.
+  const { error: voiceError } = await supabase
+    .from('voice_conversations')
+    .delete()
+    .eq('companion_id', id)
+    .eq('user_id', userId);
+
+  if (voiceError) {
+    // No partial deletion should remain: since we delete voice_conversations first,
+    // and then delete the companion, a failure before companion deletion will leave voice rows intact.
+    throw new Error('Failed to delete companion');
+  }
+
+  const { error: companionError } = await supabase
     .from('companions')
     .delete()
     .eq('id', id)
     .eq('user_id', userId);
 
-  if (error) {
-    throw new Error(error.message);
+  if (companionError) {
+    // If companion deletion fails after voice deletion, we cannot rollback without SQL transaction support.
+    // Keep error generic and fail gracefully.
+    throw new Error('Failed to delete companion');
   }
 
   revalidatePath('/');
   revalidatePath('/companions');
   revalidatePath('/my-journey');
 }
+
 
 export async function toggleCompanionBookmark(id: string, bookmark: boolean) {
   return updateCompanion(id, { bookmark });
