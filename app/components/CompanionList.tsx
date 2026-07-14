@@ -45,7 +45,8 @@ const CompanionList = ({ title, companions, classNames }: CompanionListProps) =>
               </div>
             </div>
           ) : (
-            <div className="space-y-3">
+            <div className="space-y-3 max-h-[350px] overflow-y-auto scroll-smooth pr-2 sm:max-h-[450px] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-emerald-500/60 [&::-webkit-scrollbar-track]:bg-emerald-500/10">
+
               {sessions.map((c) => (
                 <div
                   key={c.id}
