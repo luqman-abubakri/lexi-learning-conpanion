@@ -3,6 +3,7 @@ import CompanionCard from '@/app/components/CompanionCard';
 import CompanionsToolbar from '@/app/components/CompanionsToolbar';
 import { getCompanions } from '@/app/libs/actions/companions';
 import type { CompanionSort, CompanionVisibility } from '@/types/companion';
+import { getOptionalAuth } from '@/lib/auth';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -57,6 +58,8 @@ export default async function CompanionsPage({
     ? params.visibility
     : 'all') as CompanionVisibility | 'all';
 
+  const currentUserId = await getOptionalAuth();
+
   const companions = await getCompanions({
     search: params.q,
     subject: params.subject,
@@ -107,6 +110,8 @@ export default async function CompanionsPage({
               subject={companion.subject}
               duration={companion.duration}
               color={companion.color}
+              ownerId={companion.user_id}
+              currentUserId={currentUserId ?? undefined}
             />
           ))}
         </section>

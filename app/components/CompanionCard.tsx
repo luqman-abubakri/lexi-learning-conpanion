@@ -1,23 +1,29 @@
-import Link from "next/link"; 
-import { BookMarkedIcon, Clock } from "lucide-react"; 
+import Link from "next/link";
+import { BookMarkedIcon, Clock } from "lucide-react";
 
-interface CompanionCardProps { 
-  id: string; 
-  name: string; 
-  topic: string; 
-  subject: string; 
-  duration: number; 
-  color: string; 
-} 
+import CompanionDeleteButton from "@/app/components/CompanionDeleteButton";
+
+interface CompanionCardProps {
+  id: string;
+  name: string;
+  topic: string;
+  subject: string;
+  duration: number;
+  color: string;
+  ownerId?: string;
+  currentUserId?: string;
+}
 
 const CompanionCard = ({
-  id, 
-  name, 
-  topic, 
-  subject, 
-  duration, 
-  color
-}: CompanionCardProps) => { 
+  id,
+  name,
+  topic,
+  subject,
+  duration,
+  color,
+  ownerId,
+  currentUserId,
+}: CompanionCardProps) => {
   return ( 
     <div className="w-full h-full max-w-md mx-auto sm:max-w-full"> 
       <article 
@@ -50,21 +56,31 @@ const CompanionCard = ({
         {/* Info & Action Footer Area */}
         <div className="mt-auto space-y-4">
           {/* Duration Badge */}
-          <div className="flex items-center gap-2 text-xs md:text-sm font-semibold text-neutral-900"> 
-            <Clock className="w-4 h-4 shrink-0"/> 
+          <div className="flex items-center gap-2 text-xs md:text-sm font-semibold text-neutral-900">
+            <Clock className="w-4 h-4 shrink-0" />
             <span>{duration} mins</span>
-          </div> 
+          </div>
 
           {/* Action Button */}
-          <Link href={`/companions/${id}`} className="block w-full"> 
-            <button className="bg-black w-full text-center py-3 px-4 rounded-xl text-white font-semibold text-sm md:text-base hover:bg-neutral-800 active:scale-[0.99] transition-all"> 
-              Launch Lessons 
-            </button> 
-          </Link> 
-        </div>
+          <div className="space-y-3">
+            <Link href={`/companions/${id}`} className="block w-full">
+              <button className="bg-black w-full text-center py-3 px-4 rounded-xl text-white font-semibold text-sm md:text-base hover:bg-neutral-800 active:scale-[0.99] transition-all">
+                Launch Lessons
+              </button>
+            </Link>
 
-      </article> 
-    </div> 
+            {ownerId && currentUserId ? (
+              <CompanionDeleteButton
+                companionId={id}
+                ownerId={ownerId}
+                currentUserId={currentUserId}
+                className="w-full justify-center"
+              />
+            ) : null}
+          </div>
+        </div>
+      </article>
+    </div>
   ) 
 } 
 
