@@ -2,6 +2,8 @@ import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import PwaClient from "./components/PwaClient";
+
 
 const geistSans = { variable: "--font-geist-sans" };
 const geistMono = { variable: "--font-geist-mono" };
@@ -16,8 +18,6 @@ export const metadata: Metadata = {
 
   description:
     "Learn faster with Lexi, an AI-powered voice study companion. Practice concepts, ask questions naturally, and improve your learning with personalized AI conversations.",
-
-  applicationName: "Lexi",
 
   keywords: [
     "AI",
@@ -86,10 +86,24 @@ export const metadata: Metadata = {
   },
 
   icons: {
-    icon: "/icon.png",
+    icon: "/icons/icon-192x192.png",
+    shortcut: "/icons/icon-192x192.png",
+    apple: "/icons/apple-touch-icon.png",
   },
 
+  themeColor: "#059669",
+  applicationName: "Lexi",
   category: "education",
+
+
+  manifest: "/manifest.webmanifest",
+
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Lexi",
+  },
 };
 
 export default function RootLayout({
@@ -105,6 +119,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <ClerkProvider>
           <Navbar />
+          <PwaClient />
           {children}
         </ClerkProvider>
       </body>
