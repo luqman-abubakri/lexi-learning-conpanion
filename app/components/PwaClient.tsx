@@ -103,8 +103,7 @@ function OnlineOfflineBanners() {
   useEffect(() => {
     if (!online) return;
 
-    // Avoid setState directly inside effect body.
-    queueMicrotask(() => setShowOnlineToast(true));
+    setShowOnlineToast(true);
 
     const t = window.setTimeout(() => setShowOnlineToast(false), 3000);
     return () => window.clearTimeout(t);
