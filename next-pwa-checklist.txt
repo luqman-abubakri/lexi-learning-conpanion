@@ -1,0 +1,23 @@
+Lexi PWA Checklist
+
+- [x] manifest.webmanifest created at repo root
+- [x] public/sw.js created
+- [x] app/offline/page.tsx created
+- [x] PwaClient mounted in app/layout.tsx
+- [x] public/icons generated from public/logo.png
+  - icon-72x72.png
+  - icon-96x96.png
+  - icon-128x128.png
+  - icon-144x144.png
+  - icon-152x152.png
+  - apple-touch-icon.png (180)
+  - icon-192x192.png
+  - icon-384x384.png
+  - icon-512x512.png
+  - favicon-16x16.png
+  - favicon-32x32.png
+  - maskable-icon-512x512.png
+- [ ] run next build
+- [ ] lint/typecheck
+- [ ] Lighthouse PWA audit
+
