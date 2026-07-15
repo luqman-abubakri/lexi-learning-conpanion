@@ -1,4 +1,16 @@
+"use client";
+
+import { useCallback } from "react";
+
 export default function OfflinePage() {
+  const onRetry = useCallback(() => {
+    window.location.reload();
+  }, []);
+
+  const onGoBack = useCallback(() => {
+    window.history.back();
+  }, []);
+
   return (
     <main>
       {/* Render a lightweight offline shell (PWA requirement). */}
@@ -28,8 +40,9 @@ export default function OfflinePage() {
             <button
               className="rounded-xl bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-700 active:scale-[0.99]"
               onClick={() => {
-                if (typeof window !== 'undefined') window.location.reload();
+                if (typeof window !== "undefined") window.location.reload();
               }}
+              type="button"
             >
               Retry
             </button>
