@@ -23,6 +23,7 @@ const CACHE = {
 };
 
 const OFFLINE_URL = "/offline";
+const OFFLINE_FALLBACK_HTML = "/offline.html";
 
 const isNavigationRequest = (request) => {
   return (
@@ -110,8 +111,14 @@ const shouldNeverCache = (requestUrl, method) => {
 self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
-      // Pre-cache offline fallback shell
+      // Pre-cache deterministic offline fallback HTML.
       const cache = await caches.open(CACHE.fallback);
+      try {
+        await cache.add(new Request(OFFLINE_FALLBACK_HTML, { cache: "reload" }));
+      } catch {
+        // ignore
+      }
+      // Best-effort: also cache the Next route (may not be fetchable before first navigation).
       try {
         await cache.add(new Request(OFFLINE_URL, { cache: "reload" }));
       } catch {
@@ -132,6 +139,16 @@ self.addEventListener("activate", (event) => {
         })
       );
       await self.clients.claim();
+
+      // Notify clients so UI can show “update available”.
+      try {
+        const allClients = await self.clients.matchAll({ type: "window" });
+        for (const client of allClients) {
+          client.postMessage({ type: "LEXI_SW_UPDATED" });
+        }
+      } catch {
+        // ignore
+      }
     })()
   );
 });
@@ -211,8 +228,16 @@ self.addEventListener("fetch", (event) => {
         } catch {
           // offline fallback
           const cache = await caches.open(CACHE.fallback);
-          const cached = await cache.match(OFFLINE_URL);
-          return cached || new Response("Offline", { status: 200, headers: { "Content-Type": "text/plain" } });
+          const cached =
+            (await cache.match(OFFLINE_URL)) ||
+            (await cache.match(OFFLINE_FALLBACK_HTML));
+          return (
+            cached ||
+            new Response("Offline", {
+              status: 200,
+              headers: { "Content-Type": "text/plain" },
+            })
+          );
         }
       })()
     );
